@@ -13,7 +13,7 @@ RUN	addgroup -g ${SERVICE_GID} ${SERVICE_GROUP} && \
 	ln -s /usr/lib/jvm/java-1.8-openjdk/lib/amd64/jli/libjli.so /lib/libjli.so && \
 	setcap 'cap_net_bind_service=+ep' $(readlink -f $(which java))
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/target
 COPY *.jar ./app.jar
 
 RUN	chown -R ${SERVICE_USER}:${SERVICE_GROUP} ./app.jar
