@@ -9,6 +9,7 @@ resources:
 - repo: self
 
 variables:
+
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '34bc26c7-561c-408f-be7b-e0f0035a6536'
   imageRepository: 'queuemaster'
@@ -18,8 +19,27 @@ variables:
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
+                        
+                    
 stages:
+- stage: Version 
+  jobs:
+  - job: UpdateVersion
+    displayName: Version
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - checkout: self
+      persistCredentials: true
+    - task: gitversion/setup@0
+      displayName: 'Install GitTools'
+      inputs:
+      versionSpec: '5.3.x'
+    - task: gitversion/execute@0
+      displayName: 'Calculate SemVer'
+    - script: echo current version is $(GitVersion.SemVer)
+      displayName: 'Display calculated version'                        
+
 - stage: Build
   displayName: Build and push stage
   jobs:
